@@ -1,5 +1,5 @@
-MyExample version 0.01
-======================
+Test::HexDifferences version 0.001
+==================================
 
 Subroutines don't have interpreted into strings.
 The module ties the subroutine to a hash.
@@ -30,7 +30,7 @@ This module requires these other modules and libraries:
 
 COPYRIGHT AND LICENCE
 
-Copyright (c) 2010,
+Copyright (c) 2011,
 Steffen Winkler
 steffenw at cpan.org.
 All rights reserved.

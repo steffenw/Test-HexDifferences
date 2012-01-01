@@ -27,4 +27,4 @@ Module::Build->new(
     add_to_cleanup       => [ qw(
         META.yml *.bak *.gz Makefile.PL
     ) ],
-)->create_build_script();
+)->create_build_script;
