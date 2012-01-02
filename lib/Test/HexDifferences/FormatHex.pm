@@ -198,7 +198,7 @@ __END__
 
 =head1 NAME
 
-Test::HexDifferences::FormatHex - Formats binary to hexadecimal strings
+Test::HexDifferences::FormatHex - Format binary to hexadecimal strings
 
 =head1 VERSION
 

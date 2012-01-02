@@ -6,12 +6,15 @@ use Module::Build;
 Module::Build->new(
     module_name       => 'Test::HexDifferences',
     license           => 'perl',
-    dist_abstract     => 'Test::HexDifferences - differences of hexadecimal text',
+    dist_abstract     => 'Test::HexDifferences - Test binary as hexadecimal string',
     dist_author       => 'Steffen Winkler <steffenw at cpan.org>',
     dist_version_from => 'lib/Test/HexDifferences.pm',
     requires          => {
-        perl    => 5.006,
-        version => 0,
+        perl                   => 5.006,
+        version                => 0,
+        'Test::Differences'    => 0,
+        'Perl6::Export::Attrs' => 0,
+
     },
     build_requires => {
         'Test::NoWarnings' => '1.03',

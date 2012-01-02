@@ -45,7 +45,7 @@ __END__
 
 =head1 NAME
 
-Test::HexDifferences - Test strings as hexadecimal data
+Test::HexDifferences - Test binary as hexadecimal string
 
 =head1 VERSION
 
