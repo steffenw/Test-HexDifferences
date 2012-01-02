@@ -71,7 +71,7 @@ Test::HexDifferences - Test strings as hexadecimal data
         $expected,
         {
             address => $start_address,
-            format  => "%a : %8C : '%d'\n",
+            format  => "%a : %4C : '%d'\n",
         }
         $test_name,
     );
@@ -80,6 +80,9 @@ If C<$got> or C<$expected> is C<undef> or a reference,
 the hexadecimal formatter is off.
 Then C<eq_or_hex_diff> is the same like C<eq_or_diff> of
 L<Test::Differences|Test::Differences>.
+
+See L<Test::HexDifferences::FormatHex|Test::HexDifferences::FormatHex>
+for the format description.
 
 =head1 EXAMPLE
 
@@ -95,11 +98,11 @@ Run this *.pl files.
     eq_or_hex_diff(
         $got_data,
         $expected_data,
-        {
-            address => $display_start_address,
-            format  => $format_string,
+        {                                      # optional hash reference
+            address => $display_start_address, # optional
+            format  => $format_string,         # optional
         }
-        $test_name,
+        $test_name,                            # optional
     );
 
 =head1 DIAGNOSTICS
@@ -129,6 +132,8 @@ none
 =head1 SEE ALSO
 
 L<Test::Differences|Test::Differences>
+
+L<Test::HexDifferences::FormatHex|Test::HexDifferences::FormatHex>
 
 =head1 AUTHOR
 

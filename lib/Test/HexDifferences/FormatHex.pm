@@ -53,8 +53,9 @@ sub _next_format {
     }xmse;
     if ( ! $is_match ) {
         cluck
-            "Unknown format at % ... x in ${$format_ref}.",
+            qq{Unknown format at %[repetition factor]x in "${$format_ref}".},
             ' Falling back to default format';
+        ${$format_ref} = "$default_format%*x";
         return $default_format;
     }
 
@@ -146,7 +147,7 @@ sub _format_word {
     return ${$format_ref} =~ s{
         \A
         % ( [1-9] \d* )?
-        ( [CVNvn] | [LSQ] [<>] )
+        ( [LSQ] [<>] | [CVNvnLSQ]  )
     } {
         do {
             my $byte_length = $byte_length_of{$2};
