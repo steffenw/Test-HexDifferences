@@ -5,7 +5,6 @@ use warnings;
 
 our $VERSION = '0.001';
 
-use Carp qw(cluck);
 use Perl6::Export::Attrs;
 
 my $default_format = "%a : %4C : '%d'\n";
@@ -23,13 +22,13 @@ sub format_hex :Export(:DEFAULT) {
         : {};
     my $format  = $attr_ref->{format}  || "$default_format%*x";
     my $address = $attr_ref->{address} || 0;
-
+    my $multibyte_error = 0;
     my $output = q{};
     BLOCK:
     while ( length $data ) {
-        my $format_block = _next_format(\$format);
+        my $format_block = _next_format(\$format, \$multibyte_error);
         while ( length $format_block ) {
-            $output .= _format_items( \$data, \$format_block, \$address );
+            $output .= _format_items( \$data, \$format_block, \$address, \$multibyte_error );
         }
     }
 
@@ -37,7 +36,7 @@ sub format_hex :Export(:DEFAULT) {
 }
 
 sub _next_format {
-    my $format_ref = shift;
+    my ($format_ref, $multibyte_error_ref) = @_;
 
     my $format;
     my $is_match = ${$format_ref} =~ s{
@@ -51,11 +50,9 @@ sub _next_format {
         ? "$1\%${new_count}x"
         : q{};
     }xmse;
-    if ( ! $is_match ) {
-        cluck
-            qq{Unknown format at %[repetition factor]x in "${$format_ref}".},
-            ' Falling back to default format';
+    if ( ${$multibyte_error_ref} || ! $is_match ) {
         ${$format_ref} = "$default_format%*x";
+        ${$multibyte_error_ref} = 0;
         return $default_format;
     }
 
@@ -63,7 +60,7 @@ sub _next_format {
 }
 
 sub _format_items {
-    my ($data_ref, $format_ref, $address_ref) = @_;
+    my ($data_ref, $format_ref, $address_ref, $multibyte_error_ref) = @_;
 
     my $output = q{};
     my $data_length = 0;
@@ -85,7 +82,7 @@ sub _format_items {
         _format_address(\$output, $format_ref, $address_ref)
             and redo RUN;
         # words
-        _format_word(\$output, $data_ref, \$data_length, $format_ref, $address_ref)
+        _format_word(\$output, $data_ref, \$data_length, $format_ref, $address_ref, $multibyte_error_ref)
             and redo RUN;
         # display ascii
         _format_ascii(\$output, $data_ref, \$data_length, $format_ref)
@@ -126,22 +123,22 @@ sub _format_address {
 my %byte_length_of = (
     'C'  => 1, # unsigned char
     'S'  => 2, # unsigned 16-bit
+    'S<' => 2, # unsigned 16-bit, little-endian
+    'S>' => 2, # unsigned 16-bit, big-endian
+    'v'  => 2, # unsigned 16-bit, little-endian
+    'n'  => 2, # unsigned 16-bit, big-endian
     'L'  => 4, # unsigned 32-bit
     'L<' => 4, # unsigned 32-bit, little-endian
     'L>' => 4, # unsigned 32-bit, big-endian
     'V'  => 4, # unsigned 32-bit, little-endian
     'N'  => 4, # unsigned 32-bit, big-endian
-    'S<' => 2, # unsigned 16-bit, little-endian
-    'S>' => 2, # unsigned 16-bit, big-endian
-    'v'  => 2, # unsigned 16-bit, little-endian
-    'n'  => 2, # unsigned 16-bit, big-endian
     'Q'  => 8, # unsigned 64-bit
     'Q<' => 8, # unsigned 64-bit, little-endian
     'Q>' => 8, # unsigned 64-bit, big-endian
 );
 
 sub _format_word {
-    my ($output_ref, $data_ref, $data_length_ref, $format_ref, $address_ref)
+    my ($output_ref, $data_ref, $data_length_ref, $format_ref, $address_ref, $multibyte_error_ref)
         = @_;
 
     return ${$format_ref} =~ s{
@@ -163,7 +160,12 @@ sub _format_word {
                     ${$address_ref}     += $byte_length;
                     $hex;
                 }
-                : q{ } x 2 x $byte_length;
+                : do {
+                    if ( $byte_length > 1 ) {
+                        ${$multibyte_error_ref}++;    
+                    }
+                    q{ } x 2 x $byte_length;
+                };
             } 1 .. ( $1 || 1 );
             q{};
         }
