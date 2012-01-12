@@ -17,8 +17,9 @@ Module::Build->new(
         'Test::Differences'    => 0,
     },
     build_requires => {
-        'Test::NoWarnings' => '1.03',
-        'Test::More'       => 0, # dist Test-Simple
+        'Test::More'        => 0, # dist Test-Simple
+        'Test::NoWarnings'  => 0,
+        'Test::Tester'      => 0,
     },
     recommends => {
         # build
