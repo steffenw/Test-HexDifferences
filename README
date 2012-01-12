@@ -23,8 +23,9 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-    Test::Differences
+    Hash::Util
     Perl6::Export::Attrs
+    Test::Differences
 
 COPYRIGHT AND LICENCE
 

@@ -13,12 +13,16 @@ BEGIN {
 
 *next_format = \&Test::HexDifferences::FormatHex::_next_format;
 
-my $multibyte_error = 0;
 {
-    my $format = "%4a : %1C : '%d'\n%*x";
+    my $data_pool = {
+        format => "%4a : %1C : '%d'\n%*x",
+    };
+    next_format($data_pool);
+    my $format_block = $data_pool->{format_block};
+    next_format($data_pool);
+    $format_block .= $data_pool->{format_block};
     eq_or_diff(
-        scalar next_format(\$format, \$multibyte_error)
-        . scalar next_format(\$format, \$multibyte_error),
+        $format_block,
         "%4a : %1C : '%d'\n"
         . "%4a : %1C : '%d'\n",
         'read format* 2 times',
@@ -26,20 +30,27 @@ my $multibyte_error = 0;
 }
 
 {
-    my $format
-        = "%a %2C\n%1x"
-        . "%a %5C '%d'\n%2x";
+    my $data_pool = {
+        format => "%a %2C\n%1x"
+                  . "%a %5C '%d'\n%2x",
+    };
+    next_format($data_pool);
+    my $format_block = $data_pool->{format_block};
+    next_format($data_pool);
+    $format_block .= $data_pool->{format_block};
+    next_format($data_pool);
+    $format_block .= $data_pool->{format_block};
     eq_or_diff(
-        scalar next_format(\$format, \$multibyte_error)
-        . scalar next_format(\$format, \$multibyte_error)
-        . scalar next_format(\$format, \$multibyte_error),
+        $format_block,
         "%a %2C\n"
         . "%a %5C '%d'\n"
         . "%a %5C '%d'\n",
         'read format + format',
     );
+    next_format($data_pool);
+    $format_block = $data_pool->{format_block};
     eq_or_diff(
-        scalar next_format(\$format, \$multibyte_error),
+        $format_block,
         "%a : %4C : '%d'\n",
         'read none existing format',
     );

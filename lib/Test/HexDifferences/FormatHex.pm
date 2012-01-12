@@ -1,10 +1,11 @@
-package Test::HexDifferences::FormatHex;
+package Test::HexDifferences::FormatHex;  ## no critic (TidyCode)
 
 use strict;
 use warnings;
 
 our $VERSION = '0.001';
 
+use Hash::Util qw(lock_keys);
 use Perl6::Export::Attrs;
 
 my $default_format = "%a : %4C : '%d'\n";
@@ -20,101 +21,107 @@ sub format_hex :Export(:DEFAULT) {
         = ref $attr_ref eq 'HASH'
         ? $attr_ref
         : {};
-    my $format  = $attr_ref->{format}  || "$default_format%*x";
-    my $address = $attr_ref->{address} || 0;
-    my $multibyte_error = 0;
-    my $output = q{};
+    my $data_pool = {
+        # global
+        data               => $data,
+        format             => $attr_ref->{format}  || "$default_format%*x",
+        address            => $attr_ref->{address} || 0,
+        output             => q{},
+        # to format a block
+        format_block       => undef,
+        data_length        => undef,
+        is_multibyte_error => undef,
+    };
+    lock_keys %{$data_pool};
     BLOCK:
-    while ( length $data ) {
-        my $format_block = _next_format(\$format, \$multibyte_error);
-        while ( length $format_block ) {
-            $output .= _format_items( \$data, \$format_block, \$address, \$multibyte_error );
-        }
+    while ( length $data_pool->{data} ) {
+        _next_format($data_pool);
+        _format_items($data_pool);
     }
 
-    return $output;
+    return $data_pool->{output};
 }
 
 sub _next_format {
-    my ($format_ref, $multibyte_error_ref) = @_;
+    my $data_pool = shift;
 
-    my $format;
-    my $is_match = ${$format_ref} =~ s{
+    my $is_match = $data_pool->{format} =~ s{
         \A
-          ( .*? [^%] )            # format of the block
-          % ( [1-9] \d* | [*] ) x # repetition factor
+          ( .*? [^%] )               # format of the block
+          % ( 0* [1-9] \d* | [*] ) x # repetition factor
     } {
         my $new_count = $2 eq q{*} ? q{*} : $2 - 1;
-        $format = $1;
+        $data_pool->{format_block} = $1;
         $new_count
         ? "$1\%${new_count}x"
         : q{};
     }xmse;
-    if ( ${$multibyte_error_ref} || ! $is_match ) {
-        ${$format_ref} = "$default_format%*x";
-        ${$multibyte_error_ref} = 0;
-        return $default_format;
+    if ( $data_pool->{is_multibyte_error} || ! $is_match ) {
+        $data_pool->{format}             = "$default_format%*x";
+        $data_pool->{format_block}       = $default_format;
+        $data_pool->{is_multibyte_error} = 0;
+        return;
     }
 
-    return $format;
+    return;
 }
 
 sub _format_items {
-    my ($data_ref, $format_ref, $address_ref, $multibyte_error_ref) = @_;
+    my $data_pool = shift;
 
-    my $output = q{};
-    my $data_length = 0;
+    $data_pool->{data_length} = 0;
     RUN: {
         # % written as %%
-        ${$format_ref} =~ s{
+        $data_pool->{format_block} =~ s{
             \A % ( % )
         } {
             do {
-                $output .= $1;
+                $data_pool->{output} .= $1;
                 q{};
             }
         }xmse and redo RUN;
         # \n written as %\n will be ignored
-        ${$format_ref} =~ s{
+        $data_pool->{format_block} =~ s{
             \A % [\n]
         }{}xms and redo RUN;
         # address
-        _format_address(\$output, $format_ref, $address_ref)
+        _format_address($data_pool)
             and redo RUN;
         # words
-        _format_word(\$output, $data_ref, \$data_length, $format_ref, $address_ref, $multibyte_error_ref)
+        _format_word($data_pool)
             and redo RUN;
         # display ascii
-        _format_ascii(\$output, $data_ref, \$data_length, $format_ref)
+        _format_ascii($data_pool)
             and redo RUN;
         # display any other char
-        ${$format_ref} =~ s{
+        $data_pool->{format_block} =~ s{
           \A (.)
         } {
             do {
-                $output .= $1;
+                $data_pool->{output} .= $1;
                 q{};
             }
         }xmse and redo RUN;
-        if ($data_length) {
+        if ( $data_pool->{data_length} ) {
             # clear already displayed data
-            substr ${$data_ref}, 0, $data_length, q{};
-            $data_length = 0;
+            substr $data_pool->{data}, 0, $data_pool->{data_length}, q{};
+            $data_pool->{data_length} = 0;
         }
     }
 
-    return $output;
+    return;
 }
 
 sub _format_address {
-    my ($output_ref, $format_ref, $address_ref) = @_;
+    my $data_pool = shift;
 
-    return ${$format_ref} =~ s{
-        \A % ( [48]? ) a
+    return $data_pool->{format_block} =~ s{
+        \A % ( 0* [48]? ) a
     } {
         do {
             my $length = $1 || 4;
-            ${$output_ref} .= sprintf "%0${length}X", ${$address_ref};
+            $data_pool->{output}
+                .= sprintf "%0${length}X", $data_pool->{address};
             q{};
         }
     }xmse;
@@ -138,31 +145,36 @@ my %byte_length_of = (
 );
 
 sub _format_word {
-    my ($output_ref, $data_ref, $data_length_ref, $format_ref, $address_ref, $multibyte_error_ref)
-        = @_;
+    my $data_pool = shift;
 
-    return ${$format_ref} =~ s{
+    return $data_pool->{format_block} =~ s{
         \A
-        % ( [1-9] \d* )?
-        ( [LSQ] [<>] | [CVNvnLSQ]  )
+        % ( 0* [1-9] \d* )?
+        ( [LSQ] [<>] | [CVNvnLSQ] )
     } {
         do {
             my $byte_length = $byte_length_of{$2};
-            ${$output_ref} .= join q{ }, map {
-                ( length ${$data_ref} >= ${$data_length_ref} + $byte_length )
+            $data_pool->{output} .= join q{ }, map {
+                (
+                    length $data_pool->{data}
+                    >= $data_pool->{data_length} + $byte_length
+                )
                 ? do {
                     my $hex = sprintf
                         q{%0} . 2 * $byte_length . q{X},
                         unpack
                             $2,
-                            substr ${$data_ref}, ${$data_length_ref}, $byte_length;
-                    ${$data_length_ref} += $byte_length;
-                    ${$address_ref}     += $byte_length;
+                            substr
+                                $data_pool->{data},
+                                $data_pool->{data_length},
+                                $byte_length;
+                    $data_pool->{data_length} += $byte_length;
+                    $data_pool->{address}     += $byte_length;
                     $hex;
                 }
                 : do {
                     if ( $byte_length > 1 ) {
-                        ${$multibyte_error_ref}++;    
+                        $data_pool->{is_multibyte_error}++;
                     }
                     q{ } x 2 x $byte_length;
                 };
@@ -173,20 +185,20 @@ sub _format_word {
 }
 
 sub _format_ascii {
-    my ($output_ref, $data_ref, $data_length_ref, $format_ref) = @_;
+    my $data_pool = shift;
 
-    return ${$format_ref} =~ s{
+    return $data_pool->{format_block} =~ s{
         \A %d
     } {
         do {
-            my $data = substr ${$data_ref}, 0, ${$data_length_ref};
+            my $data = substr $data_pool->{data}, 0, $data_pool->{data_length};
             $data =~ s{
                 ( [\x20-\xFE] )
                 | .
             } {
                 defined $1 ? $1 : q{.}
             }xmsge;
-            ${$output_ref} .= $data;
+            $data_pool->{output} .= $data;
             q{};
         }
     }xmse;
@@ -321,7 +333,7 @@ nothing
 
 =head1 DEPENDENCIES
 
-L<Carp|Carp>
+L<Hash::Util|Hash::Util>
 
 L<Perl6::Export::Attrs|Perl6::Export::Attrs>
 

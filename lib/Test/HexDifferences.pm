@@ -1,4 +1,4 @@
-package Test::HexDifferences;
+package Test::HexDifferences; ## no critic (TidyCode)
 
 use strict;
 use warnings;
@@ -115,11 +115,11 @@ nothing
 
 =head1 DEPENDENCIES
 
-L<Carp|Carp>
+L<Test::Differences|Test::Differences>
+
+L<Test::HexDifferences::FormatHex|Test::HexDifferences::FormatHex>
 
 L<Perl6::Export::Attrs|Perl6::Export::Attrs>
-
-L<Test::Differences|Test::Differences>
 
 =head1 INCOMPATIBILITIES
 

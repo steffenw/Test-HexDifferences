@@ -12,9 +12,9 @@ Module::Build->new(
     requires          => {
         perl                   => 5.006,
         version                => 0,
-        'Test::Differences'    => 0,
+        'Hash::Util'           => 0,
         'Perl6::Export::Attrs' => 0,
-
+        'Test::Differences'    => 0,
     },
     build_requires => {
         'Test::NoWarnings' => '1.03',
