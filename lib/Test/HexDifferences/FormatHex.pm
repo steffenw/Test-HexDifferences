@@ -278,7 +278,7 @@ Every format element in the format string is starting with % like sprintf.
 
 =head2 Default format
 
-The default formatstring is:
+The default format is:
 
  "%a : %4C : '%d'\n"
 

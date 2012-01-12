@@ -91,6 +91,18 @@ Run this *.pl files.
 
 =head1 DESCRIPTION
 
+The are some special cases for testing binary data.
+
+=over
+
+=item * The ascii format is not good for e.g. a length byte 0x41 displayed as A.
+
+=item * Multibyte values are better shown as 1 value.
+
+=item * Structured binary e.g. 2 byte length followed by bytes better are shown as it is.
+
+=back
+
 =head1 SUBROUTINES/METHODS
 
 =head2 subroutine eq_or_hex_diff
