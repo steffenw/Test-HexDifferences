@@ -1,4 +1,8 @@
 Revision history for Perl extension Test::HexDifferences.
 
+0.002  Sat Jan 14 19:31:17 2012
+- new test subroutine
+  dumped_value_eq_dump_or_diff
+
 0.001  Sat Jan 14 09:17:58 2012
 - first release
