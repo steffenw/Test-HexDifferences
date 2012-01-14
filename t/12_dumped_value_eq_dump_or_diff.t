@@ -13,7 +13,7 @@ BEGIN {
 
 check_test(
     sub {
-        eq_or_hex_diff(undef, 1, 'got undef');
+        dumped_value_eq_dump_or_diff(undef, 1, 'got undef');
     },
     {
         ok    => 0,
@@ -31,25 +31,30 @@ EOT
 
 check_test(
     sub {
-        eq_or_hex_diff(1, undef, 'expected undef');
+        dumped_value_eq_dump_or_diff(1, undef, 'expected undef');
     },
     {
         ok    => 0,
         depth => 2,
         name  => 'expected undef',
         diag  => <<'EOT',
-+---+-----+----------+
-| Ln|Got  |Expected  |
-+---+-----+----------+
-*  1|1    |undef     *
-+---+-----+----------+
++---+---------------------------+---+----------+
+| Ln|Got                        | Ln|Expected  |
++---+---------------------------+---+----------+
+*  1|'0000 : 31          : 1\n  *  1|undef     *
+*  2|'                          *   |          |
++---+---------------------------+---+----------+
 EOT
     },
 );
 
 check_test(
     sub {
-        eq_or_hex_diff(1, 1, 'equal');
+        dumped_value_eq_dump_or_diff(
+            1,
+            "0000 : 31          : 1\n",
+            'equal',
+        );
     },
     {
         ok    => 1,
@@ -61,7 +66,14 @@ check_test(
 
 check_test(
     sub {
-        eq_or_hex_diff('12345678', '1234567', '12345678 ne 1234567');
+        dumped_value_eq_dump_or_diff(
+            '12345678',
+            <<'EOT',
+0000 : 31 32 33 34 : 1234
+0004 : 35 36 37    : 567
+EOT
+            '12345678 ne 1234567',
+        );
     },
     {
         ok    => 0,

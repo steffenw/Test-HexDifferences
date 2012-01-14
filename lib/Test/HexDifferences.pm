@@ -3,7 +3,7 @@ package Test::HexDifferences; ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 use Test::Differences qw(eq_or_diff);
 use Test::HexDifferences::FormatHex qw(format_hex);
@@ -37,6 +37,23 @@ sub eq_or_hex_diff :Export(:DEFAULT) {
     );
 }
 
+sub dumped_value_eq_dump_or_diff :Export(:DEFAULT) {
+    my ($got, $expected, @more) = @_;
+
+    my $attr_ref
+        = ( @more && ref $more[0] eq 'HASH' )
+        ? shift @more
+        : ();
+
+    return eq_or_diff(
+        defined $got
+            ? format_hex($got, $attr_ref)
+            : $got,
+        $expected,
+        @more,
+    );
+}
+
 # $Id$
 
 1;
@@ -49,7 +66,7 @@ Test::HexDifferences - Test binary as hexadecimal string
 
 =head1 VERSION
 
-0.001
+0.002
 
 =head1 SYNOPSIS
 
@@ -71,7 +88,7 @@ Test::HexDifferences - Test binary as hexadecimal string
         $expected,
         {
             address => $start_address,
-            format  => "%a : %4C : '%d'\n",
+            format  => "%a : %4C : %d\n",
         }
         $test_name,
     );
@@ -80,6 +97,27 @@ If C<$got> or C<$expected> is C<undef> or a reference,
 the hexadecimal formatter is off.
 Then C<eq_or_hex_diff> is the same like C<eq_or_diff> of
 L<Test::Differences|Test::Differences>.
+
+    dumped_value_eq_dump_or_diff(
+        $got_value,
+        $expected_dump,
+    );
+
+    dumped_value_eq_dump_or_diff(
+        $got_value,
+        $expected_dump,
+        $test_name,
+    );
+
+    dumped_value_eq_dump_or_diff(
+        $got_value,
+        $expected_dump,
+        {
+            address => $start_address,
+            format  => "%a : %4C : %d\n",
+        }
+        $test_name,
+    );
 
 See L<Test::HexDifferences::FormatHex|Test::HexDifferences::FormatHex>
 for the format description.
@@ -101,6 +139,8 @@ The are some special cases for testing binary data.
 
 =item * Structured binary e.g. 2 byte length followed by bytes better are shown as it is.
 
+=item * Compare 2 binary or 1 binary and a dump.
+
 =back
 
 =head1 SUBROUTINES/METHODS
@@ -108,8 +148,20 @@ The are some special cases for testing binary data.
 =head2 subroutine eq_or_hex_diff
 
     eq_or_hex_diff(
-        $got_data,
-        $expected_data,
+        $got_value,
+        $expected_value,
+        {                                      # optional hash reference
+            address => $display_start_address, # optional
+            format  => $format_string,         # optional
+        }
+        $test_name,                            # optional
+    );
+
+=head2 subroutine dumped_value_eq_dump_or_diff
+
+    dumped_value_eq_dump_or_diff(
+        $got_value,
+        $expected_dump,
         {                                      # optional hash reference
             address => $display_start_address, # optional
             format  => $format_string,         # optional
