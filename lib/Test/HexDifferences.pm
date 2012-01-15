@@ -9,7 +9,7 @@ use Test::Differences qw(eq_or_diff);
 use Test::HexDifferences::HexDump qw(hex_dump);
 use Perl6::Export::Attrs;
 
-sub eq_or_hex_diff :Export(:DEFAULT) {
+sub eq_or_dump_diff :Export(:DEFAULT) {
     my ($got, $expected, @more) = @_;
 
     my $attr_ref
@@ -37,7 +37,7 @@ sub eq_or_hex_diff :Export(:DEFAULT) {
     );
 }
 
-sub dumped_value_eq_dump_or_diff :Export(:DEFAULT) {
+sub dumped_eq_dump_or_diff :Export(:DEFAULT) {
     my ($got, $expected, @more) = @_;
 
     my $attr_ref
@@ -72,18 +72,18 @@ Test::HexDifferences - Test binary as hexadecimal string
 
     use Test::HexDifferences;
 
-    eq_or_hex_diff(
+    eq_or_dump_diff(
         $got,
         $expected,
     );
 
-    eq_or_hex_diff(
+    eq_or_dump_diff(
         $got,
         $expected,
         $test_name,
     );
 
-    eq_or_hex_diff(
+    eq_or_dump_diff(
         $got,
         $expected,
         {
@@ -95,21 +95,21 @@ Test::HexDifferences - Test binary as hexadecimal string
 
 If C<$got> or C<$expected> is C<undef> or a reference,
 the hexadecimal formatter is off.
-Then C<eq_or_hex_diff> is the same like C<eq_or_diff> of
+Then C<eq_or_dump_diff> is the same like C<eq_or_diff> of
 L<Test::Differences|Test::Differences>.
 
-    dumped_value_eq_dump_or_diff(
+    dumped_eq_dump_or_diff(
         $got_value,
         $expected_dump,
     );
 
-    dumped_value_eq_dump_or_diff(
+    dumped_eq_dump_or_diff(
         $got_value,
         $expected_dump,
         $test_name,
     );
 
-    dumped_value_eq_dump_or_diff(
+    dumped_eq_dump_or_diff(
         $got_value,
         $expected_dump,
         {
@@ -145,9 +145,9 @@ The are some special cases for testing binary data.
 
 =head1 SUBROUTINES/METHODS
 
-=head2 subroutine eq_or_hex_diff
+=head2 subroutine eq_or_dump_diff
 
-    eq_or_hex_diff(
+    eq_or_dump_diff(
         $got_value,
         $expected_value,
         {                                      # optional hash reference
@@ -157,9 +157,9 @@ The are some special cases for testing binary data.
         $test_name,                            # optional
     );
 
-=head2 subroutine dumped_value_eq_dump_or_diff
+=head2 subroutine dumped_eq_dump_or_diff
 
-    dumped_value_eq_dump_or_diff(
+    dumped_eq_dump_or_diff(
         $got_value,
         $expected_dump,
         {                                      # optional hash reference
