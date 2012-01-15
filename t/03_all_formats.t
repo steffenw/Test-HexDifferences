@@ -17,6 +17,9 @@ my $bytes = <<"EOT";
 \x21\x22\x21\x22
 \x41\x42\x43\x44\x41\x42\x43\x44\x41\x42\x43\x44
 \x41\x42\x43\x44\x41\x42\x43\x44
+\x81\x82\x83\x84\x85\x86\x87\x88
+\x81\x82\x83\x84\x85\x86\x87\x88
+\x81\x82\x83\x84\x85\x86\x87\x88
 EOT
 $bytes =~ s{\n}{}xmsg;
 
@@ -26,6 +29,9 @@ my $format = <<"EOT";
 2 byte: %a %v %n\n%1x%
 4 byte: %a %L %L< %L>\n%1x%
 4 byte: %a %V %N\n%1x%
+8 byte: %a %Q\n%1x%
+8 byte: %a %Q<\n%1x%
+8 byte: %a %Q>\n%1x%
 EOT
 
 my $result = <<'EOT';
@@ -34,6 +40,9 @@ my $result = <<'EOT';
 2 byte: 0007 2221 2122
 4 byte: 000B 44434241 44434241 41424344
 4 byte: 0017 44434241 41424344
+8 byte: 001F 8887868584838281
+8 byte: 0027 8887868584838281
+8 byte: 002F 8182838485868788
 EOT
 
 eq_or_diff(

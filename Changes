@@ -1,8 +1,14 @@
 Revision history for Perl extension Test::HexDifferences.
 
-0.002  Sat Jan 14 19:31:17 2012
-- new test subroutine
-  dumped_value_eq_dump_or_diff
+0.003  Wed Jan 25 22:39:08 2012
+- https://rt.cpan.org/Public/Bug/Display.html?id=74230
+  Some formats needed Perl 5.10 others a 64 bit machine
+  to unpack the data.
+  Moved this dependencies from unpack to module code.
+  
+0.002  Sun Jan 15 20:15:45 2012
+- renamed submodule and subroutines incompatible
+- new test subroutine dumped_eq_dump_or_diff
 
 0.001  Sat Jan 14 09:17:58 2012
 - first release

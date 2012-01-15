@@ -3,7 +3,7 @@ package Test::HexDifferences::HexDump;  ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 use Hash::Util qw(lock_keys);
 use Perl6::Export::Attrs;
@@ -127,21 +127,69 @@ sub _format_address {
     }xmse;
 }
 
-my %byte_length_of = (
-    'C'  => 1, # unsigned char
-    'S'  => 2, # unsigned 16-bit
-    'S<' => 2, # unsigned 16-bit, little-endian
-    'S>' => 2, # unsigned 16-bit, big-endian
-    'v'  => 2, # unsigned 16-bit, little-endian
-    'n'  => 2, # unsigned 16-bit, big-endian
-    'L'  => 4, # unsigned 32-bit
-    'L<' => 4, # unsigned 32-bit, little-endian
-    'L>' => 4, # unsigned 32-bit, big-endian
-    'V'  => 4, # unsigned 32-bit, little-endian
-    'N'  => 4, # unsigned 32-bit, big-endian
-    'Q'  => 8, # unsigned 64-bit
-    'Q<' => 8, # unsigned 64-bit, little-endian
-    'Q>' => 8, # unsigned 64-bit, big-endian
+my $big_endian    = q{>};
+my $little_endian = q{<};
+my $machine_endian
+    = ( pack 'S', 1 ) eq ( pack 'n', 1 )
+    ? $big_endian # network order
+    : $little_endian;
+my %format_of = (
+    'C'  => { # unsigned char
+        bytes  => 1,
+        endian => $big_endian,
+    },
+    'S'  => { # unsigned 16-bit
+        bytes  => 2,
+        endian => $machine_endian,
+    },
+    'S<' => { # unsigned 16-bit, little-endian
+        bytes  => 2,
+        endian => $little_endian,
+    },
+    'S>' => { # unsigned 16-bit, big-endian
+        bytes  => 2,
+        endian => $big_endian,
+    },
+    'v'  => { # unsigned 16-bit, little-endian
+        bytes  => 2,
+        endian => $little_endian,
+    },
+    'n'  => { # unsigned 16-bit, big-endian
+        bytes  => 2,
+        endian => $big_endian,
+    },
+    'L'  => { # unsigned 32-bit
+        bytes  => 4,
+        endian => $machine_endian,
+    },
+    'L<' => { # unsigned 32-bit, little-endian
+        bytes  => 4,
+        endian => $little_endian,
+    },
+    'L>' => { # unsigned 32-bit, big-endian
+        bytes  => 4,
+        endian => $big_endian,
+    },
+    'V'  => { # unsigned 32-bit, little-endian
+        bytes  => 4,
+        endian => $little_endian,
+    },
+    'N'  => { # unsigned 32-bit, big-endian
+        bytes  => 4,
+        endian => $big_endian,
+    },
+    'Q'  => { # unsigned 64-bit
+        bytes  => 8,
+        endian => $machine_endian,
+    },
+    'Q<' => { # unsigned 64-bit, little-endian
+        bytes  => 8,
+        endian => $little_endian,
+    },
+    'Q>' => { # unsigned 64-bit, big-endian
+        bytes  => 8,
+        endian => $big_endian,
+    },
 );
 
 sub _format_word {
@@ -153,21 +201,27 @@ sub _format_word {
         ( [LSQ] [<>] | [CVNvnLSQ] )
     } {
         do {
-            my $byte_length = $byte_length_of{$2};
+            my ($byte_length, $endian)
+                = @{ $format_of{$2} }{ qw(bytes endian) };
             $data_pool->{output} .= join q{ }, map {
                 (
                     length $data_pool->{data}
                     >= $data_pool->{data_length} + $byte_length
                 )
                 ? do {
-                    my $hex = sprintf
-                        q{%0} . 2 * $byte_length . q{X},
-                        unpack
-                            $2,
+                    my @unpacked
+                        = unpack
+                            q{C} x $byte_length,
                             substr
                                 $data_pool->{data},
                                 $data_pool->{data_length},
                                 $byte_length;
+                    if ( $endian eq q{<} ) {
+                        @unpacked = reverse @unpacked;
+                    }
+                    my $hex = sprintf
+                        '%02X' x $byte_length,
+                        @unpacked;
                     $data_pool->{data_length} += $byte_length;
                     $data_pool->{address}     += $byte_length;
                     $hex;
@@ -219,7 +273,7 @@ Test::HexDifferences::HexDump - Format binary to hexadecimal strings
 
 =head1 VERSION
 
-0.002
+0.003
 
 =head1 SYNOPSIS
 
@@ -260,6 +314,14 @@ There is a fallback to bytes if multibyte formats can not displayed.
  %Q  - unsigned 64-bit
  %Q< - unsigned 64-bit, little-endian
  %Q> - unsigned 64-bit, big-endian
+
+"pack" and "unpack" before Perl v5.10
+do not allow "<" and ">" to mark the byte order.
+This is allowed here for all Perl versions.
+
+"pack" and "unpack" on a 32 bit machine
+do not allow the "Q" formats.
+This is allowed here for all machines.
 
 =head3 Address format
 
@@ -316,7 +378,7 @@ The %...x allows to write mixed formats e.g.
 =head1 EXAMPLE
 
 Inside of this Distribution is a directory named example.
-Run this *.pl files.
+Run this *.t files.
 
 =head1 DESCRIPTION
 

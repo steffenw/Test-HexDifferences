@@ -3,7 +3,7 @@ package Test::HexDifferences; ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 use Test::Differences qw(eq_or_diff);
 use Test::HexDifferences::HexDump qw(hex_dump);
@@ -66,7 +66,7 @@ Test::HexDifferences - Test binary as hexadecimal string
 
 =head1 VERSION
 
-0.002
+0.003
 
 =head1 SYNOPSIS
 
@@ -125,7 +125,7 @@ for the format description.
 =head1 EXAMPLE
 
 Inside of this Distribution is a directory named example.
-Run this *.pl files.
+Run this *.t files.
 
 =head1 DESCRIPTION
 
