@@ -6,7 +6,7 @@ use warnings;
 our $VERSION = '0.002';
 
 use Test::Differences qw(eq_or_diff);
-use Test::HexDifferences::FormatHex qw(format_hex);
+use Test::HexDifferences::HexDump qw(hex_dump);
 use Perl6::Export::Attrs;
 
 sub eq_or_hex_diff :Export(:DEFAULT) {
@@ -30,8 +30,8 @@ sub eq_or_hex_diff :Export(:DEFAULT) {
             $expected,
         )
         : (
-            format_hex($got, $attr_ref),
-            format_hex($expected, $attr_ref),
+            hex_dump($got, $attr_ref),
+            hex_dump($expected, $attr_ref),
         ),
         @more,
     );
@@ -47,7 +47,7 @@ sub dumped_value_eq_dump_or_diff :Export(:DEFAULT) {
 
     return eq_or_diff(
         defined $got
-            ? format_hex($got, $attr_ref)
+            ? hex_dump($got, $attr_ref)
             : $got,
         $expected,
         @more,
@@ -119,7 +119,7 @@ L<Test::Differences|Test::Differences>.
         $test_name,
     );
 
-See L<Test::HexDifferences::FormatHex|Test::HexDifferences::FormatHex>
+See L<Test::HexDifferences::HexDump|Test::HexDifferences::HexDump>
 for the format description.
 
 =head1 EXAMPLE
@@ -181,7 +181,7 @@ nothing
 
 L<Test::Differences|Test::Differences>
 
-L<Test::HexDifferences::FormatHex|Test::HexDifferences::FormatHex>
+L<Test::HexDifferences::HexDump|Test::HexDifferences::HexDump>
 
 L<Perl6::Export::Attrs|Perl6::Export::Attrs>
 
@@ -197,7 +197,7 @@ none
 
 L<Test::Differences|Test::Differences>
 
-L<Test::HexDifferences::FormatHex|Test::HexDifferences::FormatHex>
+L<Test::HexDifferences::HexDump|Test::HexDifferences::HexDump>
 
 =head1 AUTHOR
 

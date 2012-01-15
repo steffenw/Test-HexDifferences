@@ -1,4 +1,4 @@
-package Test::HexDifferences::FormatHex;  ## no critic (TidyCode)
+package Test::HexDifferences::HexDump;  ## no critic (TidyCode)
 
 use strict;
 use warnings;
@@ -10,7 +10,7 @@ use Perl6::Export::Attrs;
 
 my $default_format = "%a : %4C : %d\n";
 
-sub format_hex :Export(:DEFAULT) {
+sub hex_dump :Export(:DEFAULT) {
     my ($data, $attr_ref) = @_;
 
     defined $data
@@ -215,7 +215,7 @@ __END__
 
 =head1 NAME
 
-Test::HexDifferences::FormatHex - Format binary to hexadecimal strings
+Test::HexDifferences::HexDump - Format binary to hexadecimal strings
 
 =head1 VERSION
 
@@ -223,13 +223,13 @@ Test::HexDifferences::FormatHex - Format binary to hexadecimal strings
 
 =head1 SYNOPSIS
 
-    use Test::HexDifferences::FormatHex;
+    use Test::HexDifferences::HexDump;
 
-    $string = format_hex(
+    $string = hex_dump(
         $binary,
     );
 
-    $string = format_hex(
+    $string = hex_dump(
         $binary,
         {
             address => $start_address,
@@ -324,9 +324,9 @@ This is a formatter for binary data.
 
 =head1 SUBROUTINES/METHODS
 
-=head2 subroutine format_hex
+=head2 subroutine hex_dump
 
-    $string = format_hex(
+    $string = hex_dump(
         $binary,
         {
             address => $display_start_address,
