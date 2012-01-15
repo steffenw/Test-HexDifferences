@@ -13,7 +13,7 @@ $ENV{TEST_EXAMPLE} or plan(
 
 plan(tests => 2);
 
-for my $test ( qw(01_eq_or_hex_diff.t 02_dumped_value_eq_dump_or_diff.t) ) {
+for my $test ( qw(01_eq_or_dump_diff.t 02_dumped_eq_dump_or_diff.t) ) {
     my $dir = getcwd();
     chdir("$dir/example");
     my $result = qx{prove -I../lib -T $test 2>&3};

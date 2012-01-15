@@ -8,10 +8,10 @@ use Test::NoWarnings;
 use Test::Differences;
 
 BEGIN {
-    use_ok('Test::HexDifferences::FormatHex');
+    use_ok('Test::HexDifferences::HexDump');
 }
 
-*next_format = \&Test::HexDifferences::FormatHex::_next_format;
+*next_format = \&Test::HexDifferences::HexDump::_next_format;
 
 {
     my $data_pool = {

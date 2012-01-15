@@ -8,7 +8,7 @@ use Test::NoWarnings;
 use Test::Differences;
 
 BEGIN {
-    use_ok('Test::HexDifferences::FormatHex');
+    use_ok('Test::HexDifferences::HexDump');
 }
 
 my $bytes = <<"EOT";
@@ -37,10 +37,10 @@ my $result = <<'EOT';
 EOT
 
 eq_or_diff(
-    format_hex(
+    hex_dump(
         $bytes,
         { format => $format },
     ),
     $result,
-    'format all',
+    'all formats',
 );

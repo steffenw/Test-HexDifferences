@@ -8,7 +8,7 @@ use Test::NoWarnings;
 use Test::HexDifferences;
 
 # use default address and default format
-eq_or_hex_diff(
+eq_or_dump_diff(
     '12345678',              # got
     '1234567',               # expected
     'example with defaults', # test name
@@ -20,7 +20,7 @@ eq_or_hex_diff(
 # - End of format.
 # - Last byte will be displayd in default format.
 # - This is the default behaviour in case of errors with multibytes format items.
-eq_or_hex_diff(
+eq_or_dump_diff(
     '12345678',             # got
     '1234567',              # expected
     {
@@ -37,9 +37,9 @@ EOT
 
 __END__
 
->prove -Ilib example\01_eq_or_hex_diff.t
-example\01_eq_or_hex_diff.t ..
-example\01_eq_or_hex_diff.t .. 1/3 #   Failed test 'example with defaults'
+>prove -Ilib example\01_eq_or_dump_diff.t
+example\01_eq_or_dump_diff.t ..
+example\01_eq_or_dump_diff.t .. 1/3 #   Failed test 'example with defaults'
 #   at D:\build\Test-HexDifferences\lib/Test/HexDifferences.pm line 26.
 # +---+----------------------------+----------------------------+
 # | Ln|Got                         |Expected                    |
@@ -60,13 +60,13 @@ example\01_eq_or_hex_diff.t .. 1/3 #   Failed test 'example with defaults'
 # |  3|'                 |  4|'                       |
 # +---+------------------+---+------------------------+
 # Looks like you failed 2 tests of 3.
-example\01_eq_or_hex_diff.t .. Dubious, test returned 2 (wstat 512, 0x200)
+example\01_eq_or_dump_diff.t .. Dubious, test returned 2 (wstat 512, 0x200)
 Failed 2/3 subtests
 
 Test Summary Report
 -------------------
-example\01_eq_or_hex_diff.t (Wstat: 512 Tests: 3 Failed: 2)
+example\01_eq_or_dump_diff.t (Wstat: 512 Tests: 3 Failed: 2)
   Failed tests:  1-2
   Non-zero exit status: 2
-Files=1, Tests=3,  1 wallclock secs ( 0.08 usr +  0.01 sys =  0.09 CPU)
+Files=1, Tests=3,  1 wallclock secs ( 0.03 usr +  0.00 sys =  0.03 CPU)
 Result: FAIL

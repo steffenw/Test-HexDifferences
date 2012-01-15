@@ -13,7 +13,7 @@ BEGIN {
 
 check_test(
     sub {
-        eq_or_hex_diff(undef, 1, 'got undef');
+        eq_or_dump_diff(undef, 1, 'got undef');
     },
     {
         ok    => 0,
@@ -31,7 +31,7 @@ EOT
 
 check_test(
     sub {
-        eq_or_hex_diff(1, undef, 'expected undef');
+        eq_or_dump_diff(1, undef, 'expected undef');
     },
     {
         ok    => 0,
@@ -49,7 +49,7 @@ EOT
 
 check_test(
     sub {
-        eq_or_hex_diff(1, 1, 'equal');
+        eq_or_dump_diff(1, 1, 'equal');
     },
     {
         ok    => 1,
@@ -61,7 +61,7 @@ check_test(
 
 check_test(
     sub {
-        eq_or_hex_diff('12345678', '1234567', '12345678 ne 1234567');
+        eq_or_dump_diff('12345678', '1234567', '12345678 ne 1234567');
     },
     {
         ok    => 0,

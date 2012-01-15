@@ -13,7 +13,7 @@ BEGIN {
 
 check_test(
     sub {
-        dumped_value_eq_dump_or_diff(undef, 1, 'got undef');
+        dumped_eq_dump_or_diff(undef, 1, 'got undef');
     },
     {
         ok    => 0,
@@ -31,7 +31,7 @@ EOT
 
 check_test(
     sub {
-        dumped_value_eq_dump_or_diff(1, undef, 'expected undef');
+        dumped_eq_dump_or_diff(1, undef, 'expected undef');
     },
     {
         ok    => 0,
@@ -50,7 +50,7 @@ EOT
 
 check_test(
     sub {
-        dumped_value_eq_dump_or_diff(
+        dumped_eq_dump_or_diff(
             1,
             "0000 : 31          : 1\n",
             'equal',
@@ -66,7 +66,7 @@ check_test(
 
 check_test(
     sub {
-        dumped_value_eq_dump_or_diff(
+        dumped_eq_dump_or_diff(
             '12345678',
             <<'EOT',
 0000 : 31 32 33 34 : 1234

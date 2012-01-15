@@ -14,7 +14,7 @@ use Test::HexDifferences;
 0000 : 31 32 33 34 : 1234
 0004 : 35 36 37 38 : 5678
 EOT
-    dumped_value_eq_dump_or_diff(
+    dumped_eq_dump_or_diff(
         $got,
         $dump,
         'example with defaults', # test name
@@ -39,7 +39,7 @@ EOT
 %a %2n
 %1x%
 EOT
-    dumped_value_eq_dump_or_diff(
+    dumped_eq_dump_or_diff(
         $got,
         $dump,
         {
@@ -52,10 +52,10 @@ EOT
 
 __END__
 
->prove -Ilib example\02_format_hex.t
-example\02_format_hex.t ..
-example\02_format_hex.t .. 1/3 #   Failed test 'example with defaults'
-#   at example\02_format_hex.t line 18.
+>prove -Ilib example\02_dumped_eq_dump_or_diff.t
+example\02_dumped_eq_dump_or_diff.t ..
+example\02_dumped_eq_dump_or_diff.t .. 1/3 #   Failed test 'example with defaults'
+#   at D:\build\Test-HexDifferences\lib/Test/HexDifferences.pm line 48.
 # +---+----------------------------+----------------------------+
 # | Ln|Got                         |Expected                    |
 # +---+----------------------------+----------------------------+
@@ -65,7 +65,7 @@ example\02_format_hex.t .. 1/3 #   Failed test 'example with defaults'
 # +---+----------------------------+----------------------------+
 
 #   Failed test 'example with customized address and format'
-#   at example\02_format_hex.t line 43.
+#   at D:\build\Test-HexDifferences\lib/Test/HexDifferences.pm line 48.
 # +---+------------------------+---+------------------+
 # | Ln|Got                     | Ln|Expected          |
 # +---+------------------------+---+------------------+
@@ -75,13 +75,13 @@ example\02_format_hex.t .. 1/3 #   Failed test 'example with defaults'
 # |  4|'                       |  3|'                 |
 # +---+------------------------+---+------------------+
 # Looks like you failed 2 tests of 3.
-example\02_format_hex.t .. Dubious, test returned 2 (wstat 512, 0x200)
+example\02_dumped_eq_dump_or_diff.t .. Dubious, test returned 2 (wstat 512, 0x200)
 Failed 2/3 subtests
 
 Test Summary Report
 -------------------
-example\02_format_hex.t (Wstat: 512 Tests: 3 Failed: 2)
+example\02_dumped_eq_dump_or_diff.t (Wstat: 512 Tests: 3 Failed: 2)
   Failed tests:  1-2
   Non-zero exit status: 2
-Files=1, Tests=3,  0 wallclock secs ( 0.05 usr +  0.01 sys =  0.06 CPU)
+Files=1, Tests=3,  0 wallclock secs ( 0.05 usr +  0.02 sys =  0.06 CPU)
 Result: FAIL

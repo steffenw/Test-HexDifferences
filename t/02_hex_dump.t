@@ -8,17 +8,17 @@ use Test::NoWarnings;
 use Test::Differences;
 
 BEGIN {
-    use_ok('Test::HexDifferences::FormatHex');
+    use_ok('Test::HexDifferences::HexDump');
 }
 
 eq_or_diff(
-    format_hex("\x00"),
+    hex_dump("\x00"),
     "0000 : 00" . ( q{ } x 3 x (4 - 1) ) . " : .\n",
     'char NUL, default format',
 );
 
 eq_or_diff(
-    format_hex(
+    hex_dump(
         "E",
         {
             address => 0xABCD,
@@ -30,7 +30,7 @@ eq_or_diff(
 );
 
 eq_or_diff(
-    format_hex(
+    hex_dump(
         "\x00\x01 .abc",
         {
             format => <<"EOT",
