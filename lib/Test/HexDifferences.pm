@@ -3,7 +3,7 @@ package Test::HexDifferences; ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 use Test::Differences qw(eq_or_diff);
 use Test::HexDifferences::HexDump qw(hex_dump);
@@ -66,7 +66,7 @@ Test::HexDifferences - Test binary as hexadecimal string
 
 =head1 VERSION
 
-0.003
+0.004
 
 =head1 SYNOPSIS
 

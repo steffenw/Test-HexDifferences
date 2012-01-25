@@ -34,7 +34,17 @@ my $format = <<"EOT";
 8 byte: %a %Q>\n%1x%
 EOT
 
-my $result = <<'EOT';
+# big-endian (network order) or little-endian
+my $result = ( pack 'S', 1 ) eq ( pack 'n', 1 ) ? <<'EOT' : <<'EOT';
+1 byte: 0000 11
+2 byte: 0001 2122 2221 2122
+2 byte: 0007 2221 2122
+4 byte: 000B 41424344 44434241 41424344
+4 byte: 0017 44434241 41424344
+8 byte: 001F 8182838485868788
+8 byte: 0027 8887868584838281
+8 byte: 002F 8182838485868788
+EOT
 1 byte: 0000 11
 2 byte: 0001 2221 2221 2122
 2 byte: 0007 2221 2122

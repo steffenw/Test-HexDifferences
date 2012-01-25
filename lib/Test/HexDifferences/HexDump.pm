@@ -3,7 +3,7 @@ package Test::HexDifferences::HexDump;  ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 use Hash::Util qw(lock_keys);
 use Perl6::Export::Attrs;
@@ -138,7 +138,7 @@ my %format_of = (
         bytes  => 1,
         endian => $big_endian,
     },
-    'S'  => { # unsigned 16-bit
+    'S'  => { # unsigned 16-bit, endian depends on machine
         bytes  => 2,
         endian => $machine_endian,
     },
@@ -158,7 +158,7 @@ my %format_of = (
         bytes  => 2,
         endian => $big_endian,
     },
-    'L'  => { # unsigned 32-bit
+    'L'  => { # unsigned 32-bit, endian depends on machine
         bytes  => 4,
         endian => $machine_endian,
     },
@@ -178,7 +178,7 @@ my %format_of = (
         bytes  => 4,
         endian => $big_endian,
     },
-    'Q'  => { # unsigned 64-bit
+    'Q'  => { # unsigned 64-bit, endian depends on machine
         bytes  => 8,
         endian => $machine_endian,
     },
@@ -273,7 +273,7 @@ Test::HexDifferences::HexDump - Format binary to hexadecimal strings
 
 =head1 VERSION
 
-0.003
+0.004
 
 =head1 SYNOPSIS
 
@@ -295,23 +295,28 @@ Test::HexDifferences::HexDump - Format binary to hexadecimal strings
 
 Every format element in the format string is starting with % like sprintf.
 
+If the given format is shorter defined as needed for the data length
+the remaining data are displayed in default format.
+If the given format is longer defined as the data length
+the output will filled with space and it stops before next repetition.
+
 =head3 Data format
 
 It is not very clever to use little-endian formats for tests.
 There is a fallback to bytes if multibyte formats can not displayed.
 
  %C  - unsigned char
- %S  - unsigned 16-bit
+ %S  - unsigned 16-bit, endian depends on machine
  %S< - unsigned 16-bit, little-endian
  %S> - unsigned 16-bit, big-endian
  %v  - unsigned 16-bit, little-endian
  %n  - unsigned 16-bit, big-endian
- %L  - unsigned 32-bit
+ %L  - unsigned 32-bit, endian depends on machine
  %L< - unsigned 32-bit, little-endian
  %L> - unsigned 32-bit, big-endian
  %V  - unsigned 32-bit, little-endian
  %N  - unsigned 32-bit, big-endian
- %Q  - unsigned 64-bit
+ %Q  - unsigned 64-bit, endian depends on machine
  %Q< - unsigned 64-bit, little-endian
  %Q> - unsigned 64-bit, big-endian
 
