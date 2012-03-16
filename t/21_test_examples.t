@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Differences;
 use Cwd qw(getcwd chdir);
 
 $ENV{TEST_EXAMPLE} or plan(
