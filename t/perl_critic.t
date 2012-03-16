@@ -13,5 +13,4 @@ $ENV{TEST_AUTHOR}
 
 all_critic_ok( qw{
     lib
-    example
 } );
