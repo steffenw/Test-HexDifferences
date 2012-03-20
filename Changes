@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::HexDifferences.
 
+0.006  Tue Mar 20 07:50:41 2012
+- changed dependence of Test::Differences
+  because problems with undef before 0.60
+
 0.005  Fri Mar 16 07:15:22 2012
 - Makefile.PL repaired
 

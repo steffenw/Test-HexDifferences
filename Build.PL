@@ -14,7 +14,7 @@ Module::Build->new(
         version                => 0,
         'Hash::Util'           => 0,
         'Perl6::Export::Attrs' => 0,
-        'Test::Differences'    => 0,
+        'Test::Differences'    => '0.60',
     },
     build_requires => {
         'Test::More'        => 0, # dist Test-Simple
