@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::HexDifferences.
 
+0.007  Wed Aug 28 08:17:34 2013
+- removed Build.PL from distribution
+
 0.006  Tue Mar 20 07:50:41 2012
 - changed dependence of Test::Differences
   because problems with undef before 0.60
