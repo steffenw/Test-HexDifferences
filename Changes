@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::HexDifferences.
 
+0.008  Sat Mar 22 08:46:13 2014
+- Sub::Exporter instead of Perl6::Export::Attrs
+
 0.007  Wed Aug 28 08:17:34 2013
 - removed Build.PL from distribution
 

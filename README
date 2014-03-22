@@ -1,4 +1,4 @@
-Test::HexDifferences version 0.007
+Test::HexDifferences version 0.008
 ==================================
 
 Test binary as hexadecimal string.
@@ -17,12 +17,12 @@ DEPENDENCIES
 This module requires these other modules and libraries:
 
     Hash::Util
-    Perl6::Export::Attrs
+    Sub::Exporter
     Test::Differences
 
 COPYRIGHT AND LICENCE
 
-Copyright (c) 2012-2013,
+Copyright (c) 2012 - 2014,
 Steffen Winkler
 steffenw at cpan.org.
 All rights reserved.

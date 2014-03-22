@@ -3,13 +3,20 @@ package Test::HexDifferences; ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.007';
+our $VERSION = '0.008';
 
+use Sub::Exporter -setup => {
+    exports => [
+        qw(eq_or_dump_diff dumped_eq_dump_or_diff),
+    ],
+    groups  => {
+        default => [ qw(eq_or_dump_diff dumped_eq_dump_or_diff) ],
+    },
+};
 use Test::Differences qw(eq_or_diff);
 use Test::HexDifferences::HexDump qw(hex_dump);
-use Perl6::Export::Attrs;
 
-sub eq_or_dump_diff :Export(:DEFAULT) {
+sub eq_or_dump_diff {
     my ($got, $expected, @more) = @_;
 
     my $attr_ref
@@ -37,7 +44,7 @@ sub eq_or_dump_diff :Export(:DEFAULT) {
     );
 }
 
-sub dumped_eq_dump_or_diff :Export(:DEFAULT) {
+sub dumped_eq_dump_or_diff {
     my ($got, $expected, @more) = @_;
 
     my $attr_ref
@@ -66,7 +73,7 @@ Test::HexDifferences - Test binary as hexadecimal string
 
 =head1 VERSION
 
-0.007
+0.008
 
 =head1 SYNOPSIS
 
@@ -183,7 +190,7 @@ L<Test::Differences|Test::Differences>
 
 L<Test::HexDifferences::HexDump|Test::HexDifferences::HexDump>
 
-L<Perl6::Export::Attrs|Perl6::Export::Attrs>
+L<Sub::Exporter|Sub::Exporter>
 
 =head1 INCOMPATIBILITIES
 

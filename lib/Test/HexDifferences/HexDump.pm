@@ -3,14 +3,21 @@ package Test::HexDifferences::HexDump;  ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.004';
+our $VERSION = '0.008';
 
 use Hash::Util qw(lock_keys);
-use Perl6::Export::Attrs;
+use Sub::Exporter -setup => {
+    exports => [
+        qw(hex_dump),
+    ],
+    groups  => {
+        default => [ qw(hex_dump) ],
+    },
+};
 
 my $default_format = "%a : %4C : %d\n";
 
-sub hex_dump :Export(:DEFAULT) {
+sub hex_dump {
     my ($data, $attr_ref) = @_;
 
     defined $data
@@ -90,12 +97,12 @@ sub _format_items {
         # words
         _format_word($data_pool)
             and redo RUN;
-        # display ascii
+        # display ASCII
         _format_ascii($data_pool)
             and redo RUN;
         # display any other char
         $data_pool->{format_block} =~ s{
-          \A (.)
+            \A (.)
         } {
             do {
                 $data_pool->{output} .= $1;
@@ -273,7 +280,7 @@ Test::HexDifferences::HexDump - Format binary to hexadecimal strings
 
 =head1 VERSION
 
-0.004
+0.008
 
 =head1 SYNOPSIS
 
@@ -334,14 +341,14 @@ This is allowed here for all machines.
  %4a - 16 bit address
  %8a - 32 bit address
 
-=head3 ascii format
+=head3 ASCII format
 
 It can not display all chars.
-Fist it must be a printable ascii char.
+First it must be a printable ASCII char.
 It can not be anything of space, q{.}, q{'}, q{"} or q{\}.
 Otherwise q{.} will be printed.
 
- %d - display ascii
+ %d - display ASCII
 
 =head3 Repetition
 
@@ -413,7 +420,7 @@ nothing
 
 L<Hash::Util|Hash::Util>
 
-L<Perl6::Export::Attrs|Perl6::Export::Attrs>
+L<Sub::Exporter|Sub::Exporter>
 
 =head1 INCOMPATIBILITIES
 
@@ -435,7 +442,7 @@ Steffen Winkler
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012,
+Copyright (c) 2012 - 2014,
 Steffen Winkler
 C<< <steffenw at cpan.org> >>.
 All rights reserved.
