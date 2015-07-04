@@ -3,7 +3,7 @@ package Test::HexDifferences; ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 use Sub::Exporter -setup => {
     exports => [
@@ -73,7 +73,7 @@ Test::HexDifferences - Test binary as hexadecimal string
 
 =head1 VERSION
 
-0.008
+0.009
 
 =head1 SYNOPSIS
 
@@ -212,7 +212,7 @@ Steffen Winkler
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012-2013,
+Copyright (c) 2012 - 2015,
 Steffen Winkler
 C<< <steffenw at cpan.org> >>.
 All rights reserved.

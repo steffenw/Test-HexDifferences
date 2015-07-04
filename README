@@ -1,4 +1,4 @@
-Test::HexDifferences version 0.008
+Test::HexDifferences version 0.009
 ==================================
 
 Test binary as hexadecimal string.
@@ -22,7 +22,7 @@ This module requires these other modules and libraries:
 
 COPYRIGHT AND LICENCE
 
-Copyright (c) 2012 - 2014,
+Copyright (c) 2012 - 2015,
 Steffen Winkler
 steffenw at cpan.org.
 All rights reserved.
