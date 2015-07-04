@@ -29,6 +29,11 @@ EOT
     },
 );
 
+my $is_new = do {
+    my $version = Test::Differences->VERSION;
+    $version =~ s{_}{}xmsg;
+    $version > 0.62;
+};
 check_test(
     sub {
         dumped_eq_dump_or_diff(1, undef, 'expected undef');
@@ -37,7 +42,14 @@ check_test(
         ok    => 0,
         depth => 2,
         name  => 'expected undef',
-        diag  => <<'EOT',
+        diag  => $is_new ? <<'EOT' : <<'EOT',
++---+-------------------------+---+----------+
+| Ln|Got                      | Ln|Expected  |
++---+-------------------------+---+----------+
+*  1|'0000 : 31          : 1  *  1|undef     *
+*  2|'                        *   |          |
++---+-------------------------+---+----------+
+EOT
 +---+---------------------------+---+----------+
 | Ln|Got                        | Ln|Expected  |
 +---+---------------------------+---+----------+
