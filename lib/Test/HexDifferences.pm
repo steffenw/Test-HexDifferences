@@ -3,8 +3,6 @@ package Test::HexDifferences; ## no critic (TidyCode)
 use strict;
 use warnings;
 
-our $VERSION = '0.009';
-
 use Sub::Exporter -setup => {
     exports => [
         qw(eq_or_dump_diff dumped_eq_dump_or_diff),
@@ -13,52 +11,86 @@ use Sub::Exporter -setup => {
         default => [ qw(eq_or_dump_diff dumped_eq_dump_or_diff) ],
     },
 };
-use Test::Differences qw(eq_or_diff);
+use Test::Builder::Module 0.99;
 use Test::HexDifferences::HexDump qw(hex_dump);
+use Text::Diff qw(diff);
 
-sub eq_or_dump_diff {
+our $VERSION = '1.000';
+
+my $builder = Test::Builder->new;
+
+my %diff_arg_of = (
+    STYLE       => 'Table',
+    INDEX_LABEL => 'Ln',
+    FILENAME_A  => 'Got',
+    FILENAME_B  => 'Expected',
+);
+
+sub eq_or_dump_diff ($$;$$) { ## no critic (SubroutinePrototypes)
     my ($got, $expected, @more) = @_;
 
     my $attr_ref
         = ( @more && ref $more[0] eq 'HASH' )
         ? shift @more
         : ();
-
-    my $is_not_a_string
+    my $both_undefined
        = ! defined $got
-       || ! defined $expected
-       || ref $got
-       || ref $expected;
+       && ! defined $expected;
+    my $any_undefined
+       = ! defined $got
+       || ! defined $expected;
+    if ( $both_undefined || $any_undefined ) {
+        my $result
+            = $both_undefined
+            || ! $any_undefined && $got eq $expected;
+        $got      = defined $got      ? $got      : 'undef';
+        $expected = defined $expected ? $expected : 'undef';
+        my $ok = $builder->ok($result, $more[0])
+            or $builder->diag(
+                diff(
+                    \$got,
+                    \$expected,
+                    \%diff_arg_of,
+                ),
+            );
+        return $ok;
+    }
+    my $ok = $builder->ok($got eq $expected, $more[0])
+        or $builder->diag(
+            diff(
+                \hex_dump($got, $attr_ref),
+                \hex_dump($expected, $attr_ref),
+                \%diff_arg_of,
+            ),
+        );
 
-    return eq_or_diff(
-        $is_not_a_string
-        ? (
-            $got,
-            $expected,
-        )
-        : (
-            hex_dump($got, $attr_ref),
-            hex_dump($expected, $attr_ref),
-        ),
-        @more,
-    );
+    return $ok;
 }
 
-sub dumped_eq_dump_or_diff {
-    my ($got, $expected, @more) = @_;
+sub dumped_eq_dump_or_diff ($$;$$) { ## no critic (SubroutinePrototypes)
+    my ($got, $expected_dump, @more) = @_;
 
     my $attr_ref
         = ( @more && ref $more[0] eq 'HASH' )
         ? shift @more
         : ();
+    $got = defined $got
+        ? hex_dump($got, $attr_ref)
+        : 'undef';
+    $expected_dump = defined $expected_dump
+        ? $expected_dump
+        : 'undef';
+    $expected_dump = defined $expected_dump ? $expected_dump : q{};
+    my $ok = $builder->ok($got eq $expected_dump, $more[0])
+        or $builder->diag(
+            diff(
+                \$got,
+                \$expected_dump,
+                \%diff_arg_of,
+            ),
+        );
 
-    return eq_or_diff(
-        defined $got
-            ? hex_dump($got, $attr_ref)
-            : $got,
-        $expected,
-        @more,
-    );
+    return $ok;
 }
 
 # $Id$
@@ -73,7 +105,7 @@ Test::HexDifferences - Test binary as hexadecimal string
 
 =head1 VERSION
 
-0.009
+1.000
 
 =head1 SYNOPSIS
 
@@ -102,8 +134,7 @@ Test::HexDifferences - Test binary as hexadecimal string
 
 If C<$got> or C<$expected> is C<undef> or a reference,
 the hexadecimal formatter is off.
-Then C<eq_or_dump_diff> is the same like C<eq_or_diff> of
-L<Test::Differences|Test::Differences>.
+Then C<eq_or_dump_diff> is a text compare.
 
     dumped_eq_dump_or_diff(
         $got_value,
@@ -186,11 +217,13 @@ nothing
 
 =head1 DEPENDENCIES
 
-L<Test::Differences|Test::Differences>
+L<Sub::Exporter|Sub::Exporter>
+
+L<Test::Builder::Module|Test::Builder::Module>
 
 L<Test::HexDifferences::HexDump|Test::HexDifferences::HexDump>
 
-L<Sub::Exporter|Sub::Exporter>
+L<Text::Diff|Text::Diff>
 
 =head1 INCOMPATIBILITIES
 
@@ -201,8 +234,6 @@ none
 none
 
 =head1 SEE ALSO
-
-L<Test::Differences|Test::Differences>
 
 L<Test::HexDifferences::HexDump|Test::HexDifferences::HexDump>
 
