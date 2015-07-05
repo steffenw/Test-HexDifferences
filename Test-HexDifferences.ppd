@@ -1,11 +1,12 @@
-<SOFTPKG NAME="Test-HexDifferences" VERSION="0.009">
+<SOFTPKG NAME="Test-HexDifferences" VERSION="1.000">
     <ABSTRACT>Test::HexDifferences - Test binary as hexadecimal string</ABSTRACT>
     <AUTHOR>Steffen Winkler &lt;steffenw at cpan.org&gt;</AUTHOR>
     <IMPLEMENTATION>
-        <REQUIRE NAME="Test::Differences" VERSION="0.60" />
+        <REQUIRE NAME="Text::Diff" VERSION="0" />
         <REQUIRE NAME="version::" VERSION="0" />
         <REQUIRE NAME="Sub::Exporter" VERSION="0" />
         <REQUIRE NAME="Hash::Util" VERSION="0" />
-        <CODEBASE HREF="PPM-Test-HexDifferences-0.009.tar.gz" />
+        <REQUIRE NAME="Test::Builder::Module" VERSION="0.99" />
+        <CODEBASE HREF="PPM-Test-HexDifferences-1.000.tar.gz" />
     </IMPLEMENTATION>
 </SOFTPKG>

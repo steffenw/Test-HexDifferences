@@ -10,13 +10,15 @@ Module::Build->new(
     dist_author       => 'Steffen Winkler <steffenw at cpan.org>',
     dist_version_from => 'lib/Test/HexDifferences.pm',
     requires          => {
-        perl                => 5.006,
-        version             => 0,
-        'Hash::Util'        => 0,
-        'Sub::Exporter'     => 0,
-        'Test::Differences' => '0.60',
+        perl                    => '5.006',
+        version                 => 0,
+        'Hash::Util'            => 0,
+        'Sub::Exporter'         => 0,
+        'Test::Builder::Module' => '0.99', # dist Test-Simple
+        'Text::Diff'            => 0,
     },
     build_requires => {
+        'Test::Differences' => '0.60',
         'Test::More'        => 0, # dist Test-Simple
         'Test::NoWarnings'  => 0,
         'Test::Tester'      => 0,

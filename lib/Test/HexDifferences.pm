@@ -11,7 +11,7 @@ use Sub::Exporter -setup => {
         default => [ qw(eq_or_dump_diff dumped_eq_dump_or_diff) ],
     },
 };
-use Test::Builder::Module 0.99;
+use Test::Builder::Module;
 use Test::HexDifferences::HexDump qw(hex_dump);
 use Text::Diff qw(diff);
 

@@ -1,8 +1,13 @@
 Revision history for Perl extension Test::HexDifferences.
 
+1.000  Sun Jul  5 15:43:06 2015
+- use Test::Diff directly
+- added prototypes
+- test output has changed
+
 0.009  Sat Jul  4 14:56:30 2015
-fixed https://rt.cpan.org/Public/Bug/Display.html?id=100489
-by checking version of Test::Differences
+- fixed https://rt.cpan.org/Public/Bug/Display.html?id=100489
+  by checking version of Test::Differences
 
 0.008  Sat Mar 22 08:46:13 2014
 - Sub::Exporter instead of Perl6::Export::Attrs

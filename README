@@ -1,4 +1,4 @@
-Test::HexDifferences version 0.009
+Test::HexDifferences version 1.000
 ==================================
 
 Test binary as hexadecimal string.
@@ -18,7 +18,9 @@ This module requires these other modules and libraries:
 
     Hash::Util
     Sub::Exporter
-    Test::Differences
+    Test::Builder::Module
+    Text::Diff
+
 
 COPYRIGHT AND LICENCE
 
